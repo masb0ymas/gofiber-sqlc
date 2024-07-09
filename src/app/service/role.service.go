@@ -86,3 +86,35 @@ func (service *RoleService) Create(ctx context.Context, name string) (*sqlc.Role
 
 	return role, err
 }
+
+func (service *RoleService) Update(ctx context.Context, id uuid.UUID, name string) (*sqlc.Role, error) {
+	// update data
+	data, err := sqlc.New(database.DB).
+		UpdateRole(ctx, sqlc.UpdateRoleParams{ID: id, Name: name})
+
+	// dto role
+	role := &sqlc.Role{
+		ID:        data.ID,
+		CreatedAt: data.CreatedAt,
+		UpdatedAt: data.UpdatedAt,
+		DeletedAt: data.DeletedAt,
+		Name:      data.Name,
+	}
+
+	if err != nil {
+		return role, err
+	}
+
+	return role, err
+}
+
+func (service *RoleService) ForceDelete(ctx context.Context, id uuid.UUID) error {
+	// delete data
+	err := sqlc.New(database.DB).DeleteRole(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

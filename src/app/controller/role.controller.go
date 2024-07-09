@@ -62,7 +62,7 @@ func GetRole(c *fiber.Ctx) error {
 	})
 }
 
-func NewRoles(c *fiber.Ctx) error {
+func NewRole(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -87,5 +87,65 @@ func NewRoles(c *fiber.Ctx) error {
 		"code":    http.StatusCreated,
 		"message": "data has been created",
 		"data":    data,
+	})
+}
+
+func UpdateRole(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	id, err := uuid.Parse(c.Params("id"))
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).
+			JSON(fiber.NewError(fiber.StatusBadRequest, err.Error()))
+	}
+
+	formData := new(schema.RoleSchema)
+	if code, message, errors := utils.ParseFormDataAndValidate(c, formData); errors != nil {
+		return c.Status(int(code)).JSON(fiber.Map{
+			"code":    int(code),
+			"message": message,
+			"errors":  errors,
+		})
+	}
+
+	roleService := service.NewRoleService()
+	data, err := roleService.Update(ctx, id, formData.Name)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.NewError(fiber.StatusInternalServerError, err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code":    http.StatusOK,
+		"message": "data has been updated",
+		"data":    data,
+	})
+}
+
+func ForceDeleteRole(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	id, err := uuid.Parse(c.Params("id"))
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).
+			JSON(fiber.NewError(fiber.StatusBadRequest, err.Error()))
+	}
+
+	roleService := service.NewRoleService()
+	err = roleService.ForceDelete(ctx, id)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.NewError(fiber.StatusInternalServerError, err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code":    http.StatusOK,
+		"message": "data has been deleted",
 	})
 }
