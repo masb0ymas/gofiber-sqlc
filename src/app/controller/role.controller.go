@@ -125,6 +125,56 @@ func UpdateRole(c *fiber.Ctx) error {
 	})
 }
 
+func RestoreRole(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	id, err := uuid.Parse(c.Params("id"))
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).
+			JSON(fiber.NewError(fiber.StatusBadRequest, err.Error()))
+	}
+
+	roleService := service.NewRoleService()
+	err = roleService.Restore(ctx, id)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.NewError(fiber.StatusInternalServerError, err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code":    http.StatusOK,
+		"message": "data has been restored",
+	})
+}
+
+func SoftDeleteRole(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	id, err := uuid.Parse(c.Params("id"))
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).
+			JSON(fiber.NewError(fiber.StatusBadRequest, err.Error()))
+	}
+
+	roleService := service.NewRoleService()
+	err = roleService.SoftDelete(ctx, id)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.NewError(fiber.StatusInternalServerError, err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code":    http.StatusOK,
+		"message": "data has been deleted",
+	})
+}
+
 func ForceDeleteRole(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

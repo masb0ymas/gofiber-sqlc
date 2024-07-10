@@ -108,9 +108,31 @@ func (service *RoleService) Update(ctx context.Context, id uuid.UUID, name strin
 	return role, err
 }
 
+func (service *RoleService) Restore(ctx context.Context, id uuid.UUID) error {
+	// restore data
+	err := sqlc.New(database.DB).RestoreRole(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (service *RoleService) SoftDelete(ctx context.Context, id uuid.UUID) error {
+	// soft delete data
+	err := sqlc.New(database.DB).SoftDeleteRole(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (service *RoleService) ForceDelete(ctx context.Context, id uuid.UUID) error {
 	// delete data
-	err := sqlc.New(database.DB).DeleteRole(ctx, id)
+	err := sqlc.New(database.DB).ForceDeleteRole(ctx, id)
 
 	if err != nil {
 		return err
