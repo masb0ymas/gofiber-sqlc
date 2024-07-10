@@ -22,12 +22,21 @@ func (q *Queries) CountRole(ctx context.Context) (int64, error) {
 	return count, err
 }
 
-const deleteRole = `-- name: DeleteRole :exec
+const forceDeleteRole = `-- name: ForceDeleteRole :exec
 DELETE FROM "role" WHERE id = $1
 `
 
-func (q *Queries) DeleteRole(ctx context.Context, id uuid.UUID) error {
-	_, err := q.db.ExecContext(ctx, deleteRole, id)
+func (q *Queries) ForceDeleteRole(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, forceDeleteRole, id)
+	return err
+}
+
+const forceDeleteRoles = `-- name: ForceDeleteRoles :exec
+DELETE FROM "role" WHERE id IN ($1)
+`
+
+func (q *Queries) ForceDeleteRoles(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, forceDeleteRoles, id)
 	return err
 }
 
@@ -103,8 +112,44 @@ func (q *Queries) NewRole(ctx context.Context, name string) (Role, error) {
 	return i, err
 }
 
+const restoreRole = `-- name: RestoreRole :exec
+UPDATE "role" SET "deleted_at" = NULL WHERE id = $1
+`
+
+func (q *Queries) RestoreRole(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, restoreRole, id)
+	return err
+}
+
+const restoreRoles = `-- name: RestoreRoles :exec
+UPDATE "role" SET "deleted_at" = NULL WHERE id IN ($1)
+`
+
+func (q *Queries) RestoreRoles(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, restoreRoles, id)
+	return err
+}
+
+const softDeleteRole = `-- name: SoftDeleteRole :exec
+UPDATE "role" SET "deleted_at" = now() WHERE id = $1
+`
+
+func (q *Queries) SoftDeleteRole(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, softDeleteRole, id)
+	return err
+}
+
+const softDeleteRoles = `-- name: SoftDeleteRoles :exec
+UPDATE "role" SET "deleted_at" = now() WHERE id IN ($1)
+`
+
+func (q *Queries) SoftDeleteRoles(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, softDeleteRoles, id)
+	return err
+}
+
 const updateRole = `-- name: UpdateRole :one
-UPDATE "role" SET name = $1 WHERE id = $2 RETURNING id, created_at, updated_at, deleted_at, name
+UPDATE "role" SET name = $1 WHERE id = $2 AND "deleted_at" = NULL RETURNING id, created_at, updated_at, deleted_at, name
 `
 
 type UpdateRoleParams struct {

@@ -11,7 +11,22 @@ SELECT * FROM "role" WHERE id = $1;
 INSERT INTO "role" (name) VALUES ($1) RETURNING *;
 
 -- name: UpdateRole :one
-UPDATE "role" SET name = $1 WHERE id = $2 RETURNING *;
+UPDATE "role" SET name = $1 WHERE id = $2 AND "deleted_at" = NULL RETURNING *;
 
--- name: DeleteRole :exec
+-- name: RestoreRole :exec
+UPDATE "role" SET "deleted_at" = NULL WHERE id = $1;
+
+-- name: SoftDeleteRole :exec
+UPDATE "role" SET "deleted_at" = now() WHERE id = $1;
+
+-- name: ForceDeleteRole :exec
 DELETE FROM "role" WHERE id = $1;
+
+-- name: RestoreRoles :exec
+UPDATE "role" SET "deleted_at" = NULL WHERE id IN ($1);
+
+-- name: SoftDeleteRoles :exec
+UPDATE "role" SET "deleted_at" = now() WHERE id IN ($1);
+
+-- name: ForceDeleteRoles :exec
+DELETE FROM "role" WHERE id IN ($1);
