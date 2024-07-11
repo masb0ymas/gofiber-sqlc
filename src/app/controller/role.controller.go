@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"gofiber-sqlc/src/app/schema"
 	"gofiber-sqlc/src/app/service"
 	"gofiber-sqlc/src/pkg/utils"
@@ -11,10 +12,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
-
-type NewRoleParams struct {
-	Name string
-}
 
 func GetRoles(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -30,7 +27,7 @@ func GetRoles(c *fiber.Ctx) error {
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"code":    http.StatusOK,
-		"message": "data has been received",
+		"message": fmt.Sprintf("%d data has been received", total),
 		"data":    roles,
 		"total":   total,
 	})

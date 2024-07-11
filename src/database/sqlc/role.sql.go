@@ -62,8 +62,8 @@ SELECT id, created_at, updated_at, deleted_at, name FROM "role" WHERE "deleted_a
 `
 
 type GetRolesParams struct {
-	Offset int32
-	Limit  int32
+	Offset int32 `db:"offset" json:"offset"`
+	Limit  int32 `db:"limit" json:"limit"`
 }
 
 func (q *Queries) GetRoles(ctx context.Context, arg GetRolesParams) ([]Role, error) {
@@ -153,8 +153,8 @@ UPDATE "role" SET name = $1 WHERE id = $2 AND "deleted_at" = NULL RETURNING id, 
 `
 
 type UpdateRoleParams struct {
-	Name string
-	ID   uuid.UUID
+	Name string    `db:"name" json:"name"`
+	ID   uuid.UUID `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateRole(ctx context.Context, arg UpdateRoleParams) (Role, error) {

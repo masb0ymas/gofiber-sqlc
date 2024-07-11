@@ -26,8 +26,12 @@ func (service *RoleService) FindAll(ctx context.Context, c *fiber.Ctx) ([]sqlc.R
 	queryPage, _ := strconv.Atoi(c.Query("page", "1"))
 	queryPageSize, _ := strconv.Atoi(c.Query("pageSize", "10"))
 
-	queryOffset := int32(queryPage) - 1
+	queryOffset := (queryPage - 1) * queryPageSize
 	queryLimit := int32(queryPageSize)
+
+	if queryPage < 1 {
+		queryOffset = 0
+	}
 
 	if queryLimit > limit {
 		queryLimit = limit
@@ -35,7 +39,7 @@ func (service *RoleService) FindAll(ctx context.Context, c *fiber.Ctx) ([]sqlc.R
 
 	// get data
 	data, err = sqlc.New(database.DB).
-		GetRoles(ctx, sqlc.GetRolesParams{Offset: queryOffset, Limit: queryLimit})
+		GetRoles(ctx, sqlc.GetRolesParams{Offset: int32(queryOffset), Limit: queryLimit})
 
 	// get total data
 	total, _ = sqlc.New(database.DB).CountRole(ctx)
