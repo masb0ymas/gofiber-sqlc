@@ -38,8 +38,10 @@ func (service *RoleService) FindAll(ctx context.Context, c *fiber.Ctx) ([]sqlc.R
 	}
 
 	// get data
-	data, err = sqlc.New(database.DB).
-		GetRoles(ctx, sqlc.GetRolesParams{Offset: int32(queryOffset), Limit: queryLimit})
+	data, err = sqlc.New(database.DB).GetRoles(ctx, sqlc.GetRolesParams{
+		Offset: int32(queryOffset),
+		Limit:  queryLimit,
+	})
 
 	// get total data
 	total, _ = sqlc.New(database.DB).CountRole(ctx)

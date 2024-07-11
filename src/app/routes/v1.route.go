@@ -22,4 +22,9 @@ func RouteV1(app *fiber.App) {
 	roleHandler.Put("/restore/:id", controller.RestoreRole)
 	roleHandler.Put("/soft-delete/:id", controller.SoftDeleteRole)
 	roleHandler.Delete("/force-delete/:id", controller.ForceDeleteRole)
+
+	userHandler := v1.Group("/user")
+	userHandler.Get("/", controller.GetUsers)
+	userHandler.Get("/:id", controller.GetUser)
+	userHandler.Post("/", controller.NewUser)
 }
