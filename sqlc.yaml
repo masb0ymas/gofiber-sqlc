@@ -7,3 +7,5 @@ sql:
       go:
         package: "sqlc"
         out: "src/database/sqlc"
+        emit_json_tags: true
+        emit_db_tags: true
