@@ -8,15 +8,18 @@ require (
 	github.com/joho/godotenv v1.5.1
 )
 
-require github.com/masb0ymas/go-utils v0.0.0-20240708151750-c31264eaa0fd
+require (
+	github.com/masb0ymas/go-utils v0.0.0-20240711075229-33b615344308
+	golang.org/x/crypto v0.25.0
+	gopkg.in/guregu/null.v4 v4.0.0
+)
 
 require (
-	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.4 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	golang.org/x/crypto v0.24.0 // indirect
-	golang.org/x/net v0.26.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 )
 
