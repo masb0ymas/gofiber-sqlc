@@ -1,9 +1,9 @@
 package main
 
 import (
-	"gofiber-sqlc/src/app/routes"
-	"gofiber-sqlc/src/database"
-	"gofiber-sqlc/src/pkg/config"
+	"gofiber-sqlc/config"
+	"gofiber-sqlc/database"
+	"gofiber-sqlc/routes"
 	"log"
 	"strconv"
 

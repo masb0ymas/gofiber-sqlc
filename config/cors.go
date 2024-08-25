@@ -2,17 +2,17 @@ package config
 
 import (
 	"fmt"
-	"gofiber-sqlc/src/pkg/constant"
-	"gofiber-sqlc/src/pkg/utils"
+	"gofiber-sqlc/pkg/constant"
 	"strings"
 
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/masb0ymas/go-utils/pkg"
 )
 
 func Cors() cors.Config {
 	allowedOrigin := strings.Join(constant.AllowedOrigin(), ", ")
 
-	logMessage := utils.PrintLog("Cors", "Allowed Origins ( "+allowedOrigin+" )")
+	logMessage := pkg.PrintLog("Cors", "Allowed Origins ( "+allowedOrigin+" )")
 	fmt.Println(logMessage)
 
 	result := cors.Config{

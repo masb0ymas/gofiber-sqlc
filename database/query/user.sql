@@ -22,8 +22,8 @@ INSERT INTO "user" (fullname, email, password, phone, token_verify, address, is_
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
 
 -- name: UpdateUser :one
-UPDATE "user" SET fullname = $1, email = $2, phone = $3, address = $4, is_active = $5, is_blocked = $6, role_id = $7
-  WHERE id = $8 AND "deleted_at" = NULL RETURNING *;
+UPDATE "user" SET fullname=$2, email=$3, phone=$4, address=$5, is_active=$6, is_blocked=$7, role_id=$8
+  WHERE id=$1 AND "deleted_at"=NULL RETURNING id;
 
 -- name: RestoreUser :exec
 UPDATE "user" SET "deleted_at" = NULL WHERE id = $1;

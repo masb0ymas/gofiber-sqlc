@@ -3,9 +3,9 @@ package controller
 import (
 	"context"
 	"fmt"
-	"gofiber-sqlc/src/app/service"
-	"gofiber-sqlc/src/database/sqlc"
-	"gofiber-sqlc/src/pkg/utils"
+	"gofiber-sqlc/database/sqlc"
+	"gofiber-sqlc/pkg/utils"
+	"gofiber-sqlc/service"
 	"net/http"
 	"time"
 
@@ -94,6 +94,50 @@ func NewUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"code":    http.StatusCreated,
 		"message": "data has been created",
+		"data":    data,
+	})
+}
+
+func UpdateUser(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	id, err := uuid.Parse(c.Params("id"))
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).
+			JSON(fiber.NewError(fiber.StatusBadRequest, err.Error()))
+	}
+
+	formData := new(sqlc.UpdateUserParams)
+	if code, message, errors := utils.ParseFormDataAndValidate(c, formData); errors != nil {
+		return c.Status(int(code)).JSON(fiber.Map{
+			"code":    int(code),
+			"message": message,
+			"errors":  errors,
+		})
+	}
+
+	userService := service.NewUserService()
+	data, err := userService.Update(ctx, sqlc.UpdateUserParams{
+		Fullname:  formData.Fullname,
+		Email:     formData.Email,
+		Phone:     formData.Phone,
+		Address:   formData.Address,
+		IsActive:  formData.IsActive,
+		IsBlocked: formData.IsBlocked,
+		RoleID:    formData.RoleID,
+		ID:        id,
+	})
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.NewError(fiber.StatusInternalServerError, err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code":    http.StatusOK,
+		"message": "data has been updated",
 		"data":    data,
 	})
 }

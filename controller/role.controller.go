@@ -3,9 +3,9 @@ package controller
 import (
 	"context"
 	"fmt"
-	"gofiber-sqlc/src/app/schema"
-	"gofiber-sqlc/src/app/service"
-	"gofiber-sqlc/src/pkg/utils"
+	"gofiber-sqlc/database/schema"
+	"gofiber-sqlc/pkg/utils"
+	"gofiber-sqlc/service"
 	"net/http"
 	"time"
 

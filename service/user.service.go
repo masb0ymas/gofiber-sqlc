@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
-	"gofiber-sqlc/src/database"
-	"gofiber-sqlc/src/database/sqlc"
+	"fmt"
+	"gofiber-sqlc/database"
+	"gofiber-sqlc/database/sqlc"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -103,4 +104,25 @@ func (service *UserService) Create(ctx context.Context, input sqlc.NewUserParams
 	}
 
 	return user, err
+}
+
+func (service *UserService) Update(ctx context.Context, input sqlc.UpdateUserParams) (uuid.UUID, error) {
+	user, err := sqlc.New(database.DB).GetUser(ctx, input.ID)
+
+	if err != nil {
+		return user.ID, err
+	}
+
+	fmt.Println(user, "TEST", "\n\n", err, "ERR", "\n\n", input)
+
+	// update user data
+	data, err := sqlc.New(database.DB).UpdateUser(ctx, input)
+
+	fmt.Println(input, "\n\n", data, "\n\n", err)
+
+	if err != nil {
+		return data, err
+	}
+
+	return data, err
 }

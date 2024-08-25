@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"gofiber-sqlc/src/app/controller"
+	"gofiber-sqlc/controller"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,4 +27,5 @@ func RouteV1(app *fiber.App) {
 	userHandler.Get("/", controller.GetUsers)
 	userHandler.Get("/:id", controller.GetUser)
 	userHandler.Post("/", controller.NewUser)
+	userHandler.Put("/:id", controller.UpdateUser)
 }

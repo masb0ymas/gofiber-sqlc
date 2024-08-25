@@ -3,12 +3,12 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"gofiber-sqlc/src/pkg/config"
-	"gofiber-sqlc/src/pkg/utils"
+	"gofiber-sqlc/config"
 	"log"
 	"strconv"
 
 	_ "github.com/lib/pq"
+	"github.com/masb0ymas/go-utils/pkg"
 )
 
 type FilteredQuery struct {
@@ -44,6 +44,6 @@ func ConnectDB() {
 	DB = db
 	msg := fmt.Sprintf("Connection %s has been established successfully.", dbname)
 
-	logMessage := utils.PrintLog("Database", msg)
+	logMessage := pkg.PrintLog("Database", msg)
 	fmt.Println(logMessage)
 }

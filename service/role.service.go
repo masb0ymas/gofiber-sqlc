@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"gofiber-sqlc/src/database"
-	"gofiber-sqlc/src/database/sqlc"
+	"gofiber-sqlc/database"
+	"gofiber-sqlc/database/sqlc"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
